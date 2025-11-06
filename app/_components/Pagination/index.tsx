@@ -17,12 +17,11 @@ export default function Pagination({
     { length: Math.ceil(totalCount / NEWS_LIST_LIMIT) },
     (_, i) => i + 1
   );
-
   return (
     <nav>
       <ul className={styles.container}>
         {pages.map((p) => (
-          <li className={styles.list} key={p}>
+          <li key={p} className={styles.list}>
             {current !== p ? (
               <Link href={`${basePath}/p/${p}`} className={styles.item}>
                 {p}

@@ -1,9 +1,9 @@
-import { createClient } from 'microcms-js-sdk';
+import { createClient } from "microcms-js-sdk";
 import type {
   MicroCMSQueries,
   MicroCMSImage,
   MicroCMSListContent,
-} from 'microcms-js-sdk';
+} from "microcms-js-sdk";
 
 export type Member = {
   name: string;
@@ -25,11 +25,11 @@ export type News = {
 } & MicroCMSListContent;
 
 if (!process.env.MICROCMS_SERVICE_DOMAIN) {
-  throw new Error('MICROCMS_SERVICE_DOMAIN is required');
+  throw new Error("MICROCMS_SERVICE_DOMAIN is not defined");
 }
 
 if (!process.env.MICROCMS_API_KEY) {
-  throw new Error('MICROCMS_API_KEY is required');
+  throw new Error("MICROCMS_API_KEY is not defined");
 }
 
 const client = createClient({
@@ -39,16 +39,16 @@ const client = createClient({
 
 export const getMembersList = async (queries?: MicroCMSQueries) => {
   const listData = await client.getList<Member>({
-    endpoint: 'members',
-    queries,
+    endpoint: "members",
+    queries: queries,
   });
   return listData;
 };
 
 export const getNewsList = async (queries?: MicroCMSQueries) => {
   const listData = await client.getList<News>({
-    endpoint: 'news',
-    queries,
+    endpoint: "news",
+    queries: queries,
   });
   return listData;
 };
@@ -58,22 +58,38 @@ export const getNewsDetail = async (
   queries?: MicroCMSQueries
 ) => {
   const detailData = await client.getListDetail<News>({
-    endpoint: 'news',
+    endpoint: "news",
     contentId,
     queries,
+    customRequestInit: {
+      next: { revalidate: queries?.draftKey === undefined ? 60 : 0 },
+    },
   });
-
   return detailData;
 };
 
-export const getCategoryDeatail = async (
+export const getCategoryDetail = async (
   contentId: string,
   queries?: MicroCMSQueries
 ) => {
   const detailData = await client.getListDetail<Category>({
-    endpoint: 'categories',
+    endpoint: "categories",
     contentId,
     queries,
   });
   return detailData;
+};
+
+export const getAllNewsList = async () => {
+  const listData = await client.getAllContents<News>({
+    endpoint: "news",
+  });
+  return listData;
+};
+
+export const getAllCategoryList = async () => {
+  const listData = await client.getAllContents<Category>({
+    endpoint: "categories",
+  });
+  return listData;
 };

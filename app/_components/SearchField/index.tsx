@@ -11,11 +11,11 @@ function SearchFieldComponent() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const q = e.currentTarget.elements.namedItem("q");
+    const q = e.currentTarget.elements.namedItem("q") as HTMLInputElement;
     if (q instanceof HTMLInputElement) {
-      const params = new URLSearchParams();
-      params.set("q", q.value.trim());
-      router.push(`/news/search?${params.toString()}`);
+      const param = new URLSearchParams();
+      param.set("q", q.value.trim());
+      router.push(`/news/search?${param.toString()}`);
     }
   };
 
